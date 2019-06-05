@@ -31,9 +31,7 @@ script:
   - "cp /home/travis/build/monitoringartist/zabbix-docker-monitoring/src/modules/zabbix_module_docker/* ."
   - "make"
   - "cd /home/travis/build/monitoringartist/zabbix-docker-monitoring/"
-
-# disabled because travis issues
-#  - "bash ./artifacts/deploy.sh"
+  - "bash ./artifacts/deploy.sh"
 
 env:
   global:
