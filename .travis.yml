@@ -7,7 +7,7 @@ notifications:
 
 install:
   - sudo apt-get update -qq
-  - sudo apt-get install -qq -y wget autoconf automake gcc subversion make pkg-config
+  - sudo apt-get install -qq -y autoconf automake gcc make pkg-config
 
 services:
   - docker
@@ -17,21 +17,22 @@ language: c
 compiler: gcc
 
 branches:
-   only:
-     - master
-     - travis
+  only:
+    - master
+    - travis
      
-before_script:  
-  - "svn --quiet export svn://svn.zabbix.com/branches/3.4 ~/zabbix/"
-  - "cd ~/zabbix"
-  - "./bootstrap.sh 1>/dev/null"
-  - "./configure --enable-agent"  
-  - "mkdir src/modules/zabbix_module_docker"
-script:  
-  - "cd src/modules/zabbix_module_docker"  
-  - "cp /home/travis/build/monitoringartist/zabbix-docker-monitoring/src/modules/zabbix_module_docker/* ."
+before_script:
+  - "git clone --single-branch --depth 1 --branch 4.0.8 https://git.zabbix.com/scm/zbx/zabbix.git"
+  - "mkdir -p zabbix/src/modules/zabbix_module_docker"
+  - "pushd zabbix"
+  - "./bootstrap.sh"
+  - "./configure --enable-agent"
+  - "popd"
+script:
+  - "cp src/modules/zabbix_module_docker/* zabbix/src/modules/zabbix_module_docker/"
+  - "pushd zabbix/src/modules/zabbix_module_docker"  
   - "make"
-  - "cd /home/travis/build/monitoringartist/zabbix-docker-monitoring/"
+  - "popd"
   - "bash ./artifacts/deploy.sh"
 
 env:
