@@ -19,6 +19,7 @@ compiler: gcc
 branches:
    only:
      - master
+     - travis
      
 before_script:  
   - "svn --quiet export svn://svn.zabbix.com/branches/3.4 ~/zabbix/"
